@@ -4,7 +4,8 @@ const shortId = require('shortid');
 
 //Untuk menyimpan buku
 const addBooksHandler = (request, h) => {
-	const { 
+	const 
+	{ 
 		name,
 		year, 
 		author, 
@@ -14,12 +15,15 @@ const addBooksHandler = (request, h) => {
 		readPage, 
 		reading 
 	} = request.payload;
+
 	const id = shortId();
 	const finished = readPage === pageCount;
 	const insertedAt = new Date().toISOString();
 	const updatedAt = insertedAt;
 
-	const detailBook = {
+	const detailBook = 
+	{
+		id,
 		name,
 		year,
 		author,
@@ -28,7 +32,6 @@ const addBooksHandler = (request, h) => {
 		pageCount,
 		readPage,
 		reading,
-		id,
 		finished,
 		insertedAt,
 		updatedAt
@@ -116,4 +119,89 @@ const getDetailBookHandler = (request, h) => {
 
 };
 
-module.exports = { addBooksHandler, getAllBooksHandler, getDetailBookHandler };
+//Untuk edit data buku
+const editDetailBookHandler = (request, h) => {
+	const { bookId } = request.params;
+
+	const { 
+		name, 
+		year, 
+		author, 
+		summary, 
+		publisher, 
+		pageCount, 
+		readPage, 
+		reading 
+	} = request.payload;
+	const updatedAt = new Date().toISOString();
+
+	const index = detailBooks.findIndex((detailBook) => detailBook.id === bookId);
+	const checkId = detailBooks.filter((detailBook) => detailBook.id === bookId)[0];
+
+	if(name === undefined){
+		const response = h.response({
+			status: 'fail',
+			message: 'Gagal memperbarui buku. Mohon isi nama buku'
+		});
+
+		response.code(400);
+		return response;
+	}
+
+	if(readPage > pageCount){
+		const response = h.response({
+			status: 'fail',
+			message: 'Gagal memperbarui buku. readPage tidak boleh lebih besar dari pageCount'
+		});
+
+		response.code(404);
+		return response;
+	}
+
+	if(checkId === undefined){
+		const response = h.response({
+			status: 'fail',
+			message: 'Gagal memperbarui buku. Id tidak ditemukan'
+		});
+		response.code(404);
+		return response;
+	}
+
+	detailBooks[index] = {
+		...detailBooks[index],
+		name, 
+		year, 
+		author, 
+		summary, 
+		publisher, 
+		pageCount, 
+		readPage, 
+		reading,
+		updatedAt
+	}
+
+	books[index] = {
+		...books[index],
+		name,
+		publisher
+	};
+
+	const response = h.response({
+		status: 'success',
+		message: 'Buku berhasil diperbarui'
+	});
+
+	response.code(200);
+	return response;
+}
+
+
+
+
+module.exports = 
+{ 
+	addBooksHandler, 
+	getAllBooksHandler, 
+	getDetailBookHandler, 
+	editDetailBookHandler 
+};
