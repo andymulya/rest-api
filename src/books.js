@@ -1,3 +1,4 @@
+const detailBooks = [];
 const books = [];
 
-module.exports = books;
+module.exports = { detailBooks, books };

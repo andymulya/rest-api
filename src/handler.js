@@ -1,4 +1,4 @@
-const books = require('./books');
+const { detailBooks, books } = require('./books');
 const shortId = require('shortid');
 
 
@@ -19,7 +19,7 @@ const addBooksHandler = (request, h) => {
 	const insertedAt = new Date().toISOString();
 	const updatedAt = insertedAt;
 
-	const book = {
+	const detailBook = {
 		name,
 		year,
 		author,
@@ -33,6 +33,12 @@ const addBooksHandler = (request, h) => {
 		insertedAt,
 		updatedAt
 	}
+
+	const book = {
+		id,
+		name,
+		publisher
+	};
 
 	if(name === undefined){
 		const response = h.response({
@@ -53,12 +59,13 @@ const addBooksHandler = (request, h) => {
 	}
 
 	const response = h.response({
-		status: 'succes',
+		status: 'success',
 		message: 'Buku berhasil ditambahkan',
 		data: {
 			bookId: id
 		}
 	});
+	detailBooks.push(detailBook);
 	books.push(book);
 
 	response.code(201);
@@ -67,4 +74,18 @@ const addBooksHandler = (request, h) => {
 
 };
 
-module.exports = { addBooksHandler };
+//Untuk mengambil semua data buku
+const getAllBooksHandler = (request, h) => {
+
+	const response = h.response({
+		status : 'success',
+		data: {
+			books
+		}
+	});
+
+	response.code(200);
+	return response;
+}
+
+module.exports = { addBooksHandler, getAllBooksHandler };
