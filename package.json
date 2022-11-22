@@ -11,7 +11,8 @@
   "license": "ISC",
   "dependencies": {
     "@hapi/hapi": "^21.0.0",
-    "nodemon": "^2.0.20"
+    "nodemon": "^2.0.20",
+    "shortid": "^2.2.16"
   },
   "devDependencies": {
     "eslint": "^8.28.0",
