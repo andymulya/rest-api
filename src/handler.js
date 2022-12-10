@@ -1,4 +1,5 @@
 const { detailBooks, books } = require('./books');
+const query = require('./func')
 const shortId = require('shortid');
 
 
@@ -79,6 +80,49 @@ const addBooksHandler = (request, h) => {
 
 //Untuk mengambil semua data buku
 const getAllBooksHandler = (request, h) => {
+	const{ name, reading,finished } = request.query; 
+
+	if(name != undefined){
+		const books = detailBooks.filter(book => book.name.toLowerCase().includes(name.toLowerCase()) != false).map(book => ({
+			id: book.id,
+			name: book.name,
+			publisher: book.publisher
+		}));
+		return query(books, h);
+	}
+
+	if(reading === '1'){
+		const booksReading = detailBooks.filter(book => book.reading === true).map(book => ({
+			id: book.id,
+			name: book.name,
+			publisher: book.publisher 
+		}));
+		return query(booksReading, h);
+
+	}else if(reading === '0'){
+		const booksReading = detailBooks.filter(book => book.reading === false).map(book => ({
+			id: book.id,
+			name: book.name,
+			publisher: book.publisher 
+		}));
+		return query(booksReading, h);
+	}
+
+	if(finished === '1'){
+		const booksFinished = detailBooks.filter(book => book.finished === true).map(book => ({
+			id: book.id,
+			name: book.name,
+			publisher: book.publisher 
+		}));
+		return query(booksFinished, h);
+	}else if(finished === '0'){
+		const booksFinished = detailBooks.filter(book => book.finished === false).map(book => ({
+			id: book.id,
+			name: book.name,
+			publisher: book.publisher 
+		}));
+		return query(booksFinished, h);
+	}
 
 	const response = h.response({
 		status : 'success',
