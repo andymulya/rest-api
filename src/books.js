@@ -1,4 +1,3 @@
 const detailBooks = [];
-const books = [];
 
-module.exports = { detailBooks, books };
+module.exports = { detailBooks };
